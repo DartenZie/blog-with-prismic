@@ -59,4 +59,27 @@ html {
   color: #fff;
   background-color: #35495e;
 }
+
+.blog-post {
+  margin: 25px 0;
+  padding: 0 100px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+.title {
+  margin: 50px 0;
+}
+p {
+  color: #000;
+  margin: 15px 0 5px;
+  max-width: 650px;
+  line-height: 1.44;
+  text-align: justify;
+}
+img {
+  width: 100%;
+}
 </style>
