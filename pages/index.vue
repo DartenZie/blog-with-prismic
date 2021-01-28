@@ -1,73 +1,49 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">
-        vue-nuxt-prismic-blog
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
-  </div>
+  <section class="blog-post">
+    <h1 class="title">{{ header }}</h1>
+    <p class="paragraph" v-for="text in content">{{ text.text }}</p>
+  </section>
 </template>
 
 <script>
-export default {}
+import Prismic from 'prismic-javascript'
+import PrismicDom from 'prismic-dom'
+import PrismicConfig from './../prismic.config'
+
+export default {
+  async asyncData() {
+    const api = await Prismic.getApi(PrismicConfig.apiEndpoint)
+    let blog_post = {}
+
+    const results = await api.query(Prismic.Predicates.at('document.type', 'blog-post'), { lang: 'cs-cz'})
+    blog_post = results.results[0]
+
+    const header = PrismicDom.RichText.asText(blog_post.data['blog_post_title'])
+    const content = blog_post.data['blog_content']
+
+    return { blog_post, header, content }
+  }
+}
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
+<style scoped>
+.blog-post {
+  margin: 25px 0;
+  padding: 0 100px;
+  width: 100%;
   display: flex;
   justify-content: center;
+  flex-direction: column;
   align-items: center;
-  text-align: center;
 }
-
 .title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
+  margin: 50px 0;
 }
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+p {
+  color: #000;
+  margin: 15px 0 5px;
+  max-width: 450px;
+  line-height: 1.44;
+  text-align: justify;
 }
 </style>
